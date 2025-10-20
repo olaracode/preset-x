@@ -5,6 +5,7 @@
 	export let options: string[] = [];
 	export let placeholder: string = 'Select an option';
 	export let disabled: boolean = false;
+	export let id: string = '';
 
 	let isOpen = false;
 	let selectElement: HTMLElement;
@@ -35,7 +36,7 @@
 </script>
 
 <div class="select-container" bind:this={selectElement}>
-	<button class="select-trigger" on:click={toggle} {disabled}>
+	<button class="select-trigger" on:click={toggle} {disabled} {id}>
 		<span class:placeholder={!value}>{value || placeholder}</span>
 		<svg
 			class="select-arrow"

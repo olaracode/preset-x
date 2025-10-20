@@ -4,7 +4,7 @@
 	import Input from './Input.svelte';
 	import { Battery, Wifi } from 'lucide-svelte';
 	import { pedals } from '$lib/pedals';
-	import EffectChain from './EffectChain.svelte';
+	import PedalBoard from './PedalBoard.svelte';
 
 	const PEDALS = pedals.map((p) => p.name);
 
@@ -35,8 +35,9 @@
 			if (!response.ok) {
 				throw new Error('Failed to generate preset');
 			}
-
-			generatedPreset = await response.json();
+			let parsedResponse = await response.json();
+			console.log(parsedResponse);
+			generatedPreset = parsedResponse;
 		} catch (error) {
 			console.error('Error:', error);
 		} finally {
@@ -193,7 +194,7 @@
 	</div>
 
 	{#if generatedPreset}
-		<EffectChain preset={generatedPreset} />
+		<PedalBoard preset={generatedPreset} />
 	{/if}
 </div>
 
@@ -201,7 +202,7 @@
 	/* --- Pedal Interface Container Styles --- */
 	.pedal-interface-container {
 		width: 100%;
-		margin-top: 20px;
+		margin: 20px 0px;
 		max-width: 900px;
 		background-color: #2a2a2a;
 		border-radius: 8px;

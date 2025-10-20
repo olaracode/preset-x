@@ -9,7 +9,6 @@
 <style>
 	.container {
 		background-color: #2a2a2a;
-		width: 100vw;
 		min-height: 100vh;
 		display: flex;
 		align-items: center;
