@@ -1,12 +1,13 @@
 <script lang="ts">
-	export let preset: any[] = [];
-	console.log(preset);
+	import type { GeneratedPreset } from '$lib/types';
+
+	export let preset: GeneratedPreset = [];
 </script>
 
 <div class="effect-chain-container">
 	<h2>Generated Preset</h2>
 	<div class="chain">
-		{#each preset as block}
+		{#each preset as block (block['fx-block-name'])}
 			<div class="effect-block">
 				<div class="block-header">
 					<span class="block-name">{block['fx-block-name']}</span>
@@ -14,7 +15,7 @@
 					<span class={`status ${block['on/off']}`}>{block['on/off']}</span>
 				</div>
 				<div class="settings">
-					{#each Object.entries(block.setting) as [key, value]}
+					{#each Object.entries(block.setting) as [key, value] (key)}
 						<div class="setting">
 							<span class="setting-key">{key}</span>
 							<span class="setting-value">{value}</span>

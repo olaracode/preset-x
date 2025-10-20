@@ -90,7 +90,9 @@ interface FxBlock {
 ```
 
 # 1. Architectural Best Practices
+
 ## A. The Backend-for-Frontend (BFF) Pattern
+
 Do Not call the AI API (Gemini, Claude, etc.) directly from the SvelteKit frontend component.
 
 **Principle**: Security and Decoupling.
@@ -104,6 +106,7 @@ This server endpoint handles the logic: loading the correct JSON, constructing t
 **Reasoning**: This is the only way to safely store your confidential AI API Key (e.g., `GEMINI_API_KEY`) on the server where it's not exposed to the client's browser.
 
 ## B. Configuration Management
+
 **Recommendation**: Use Environment Variables for all secrets and configuration.
 
 **Public (Client/Server)**: Use `VITE_PUBLIC_...` (e.g., `VITE_PUBLIC_APP_VERSION`).
@@ -113,7 +116,9 @@ This server endpoint handles the logic: loading the correct JSON, constructing t
 **Best Practice**: Store and manage these using a tool like `dotenv` locally, and your cloud provider's secret management service (e.g., Google Secret Manager, AWS Secrets Manager) in production.
 
 # 2. Frontend (SvelteKit/TypeScript) Best Practices
+
 ## A. Data Fetching and State Management
+
 **Recommendation**: Use SvelteKit's `+page.server.ts` or `+server.ts` files for all data loading and mutations.
 
 The Target Pedal JSON files should be loaded via a server-side API route to prevent exposing all device configurations to the client unnecessarily.
@@ -121,6 +126,7 @@ The Target Pedal JSON files should be loaded via a server-side API route to prev
 Use Svelte's built-in stores (`writable`, `readable`) only for client-side UI state (e.g., dropdown status, loading indicators). For global app configuration/data, rely on server loading patterns.
 
 ## B. Type Safety and Schemas
+
 **Recommendation**: Enforce strict type checking for all data structures.
 
 Define TypeScript `Interfaces` for the input JSON structure (`TargetPedalConfig`) and the final output structure (`GeneratedPreset`).
@@ -131,19 +137,22 @@ Use a validation library like `Zod` in your server endpoint (`+server.ts`) to:
 2.  Validate the structure of the JSON response from the AI before sending it back to the client. This prevents runtime crashes if the AI's output format is slightly off.
 
 # 3. AI Prompt Engineering Best Practices (Critical)
+
 The quality of the output depends entirely on the prompt.
 
 ## A. System Instructions and JSON Schema
+
 **Recommendation**: Use the AI's System Instruction/Prompt to strictly enforce the output format.
 
 Tell the AI exactly how the output must be formatted using a JSON schema you define (or use the AI's built-in JSON mode if available).
 
 ## B. Prompt Construction Flow
+
 1.  **Define the Goal**: "You are a multi-effects pedal programming assistant. Your task is to generate a detailed effects preset based on the user's desired tone, strictly adhering to the available modules."
 2.  **Provide the Constraints (The JSON Input)**:
-    *   List the available FX chain blocks (`effect-chain`).
-    *   List the available modules for each block (`modules`).
-    *   Include the `note` field for extra considerations.
+    - List the available FX chain blocks (`effect-chain`).
+    - List the available modules for each block (`modules`).
+    - Include the `note` field for extra considerations.
 3.  **Provide the User Input**: "The user wants the tone of: `[User's Description]`."
 4.  **Define the Output Schema (Crucial)**: Explicitly show the required JSON output structure and constraints (e.g., all `effect-name` values must come from the provided `model_name` list).
 
@@ -157,8 +166,9 @@ Tell the AI exactly how the output must be formatted using a JSON schema you def
 > Your response must be a valid JSON array matching this schema: `[ { "fx-block-name": "...", "effect-name": "...", "setting": { "param_name": "value", ... } } ]`"
 
 # 4. Error Handling and Resilience
+
 **Recommendation**: Implement robust error handling.
 
-*   **Timeout/Retry Logic**: Use a pattern like Exponential Backoff when calling the external AI API to handle temporary network issues or rate limits.
-*   **AI Output Failure**: If the AI response is not valid JSON (despite your strict prompt), catch the parsing error and return a generic, friendly "Could not generate preset. Please try a different tone description." message to the user. Do not crash the application.
-*   **Loading Failure**: Ensure your SvelteKit server logic handles the case where the Target Pedal JSON file is not found.
+- **Timeout/Retry Logic**: Use a pattern like Exponential Backoff when calling the external AI API to handle temporary network issues or rate limits.
+- **AI Output Failure**: If the AI response is not valid JSON (despite your strict prompt), catch the parsing error and return a generic, friendly "Could not generate preset. Please try a different tone description." message to the user. Do not crash the application.
+- **Loading Failure**: Ensure your SvelteKit server logic handles the case where the Target Pedal JSON file is not found.

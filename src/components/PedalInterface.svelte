@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { GeneratedPreset } from '$lib/types';
 	import Select from './Select.svelte';
 	import Input from './Input.svelte';
 	import { Battery, Wifi } from 'lucide-svelte';
@@ -10,18 +11,8 @@
 	let selectedPedal: string | undefined = undefined;
 	let toneDescription: string = '';
 	let masterRotation: number = 0;
-	let generatedPreset: any | null = null;
+	let generatedPreset: GeneratedPreset | null = null;
 	let isLoading = false;
-
-	$: effectChainData =
-		generatedPreset && generatedPreset['effect-chain']
-			? generatedPreset['effect-chain'].split(',').map((blockName: string) => ({
-					'fx-block-name': blockName,
-					'effect-name': generatedPreset.modules[blockName]['effect-name'],
-					'on/off': 'on', // Assuming 'on' as it's not in the new data
-					setting: generatedPreset.modules[blockName].settings
-				}))
-			: [];
 
 	const handleMasterKnobClick = () => {
 		const currentIndex = selectedPedal ? PEDALS.indexOf(selectedPedal) : -1;
@@ -64,6 +55,7 @@
 
 			<div class="knob-group">
 				<button
+					aria-label="Master volume"
 					on:click={handleMasterKnobClick}
 					class="master-knob"
 					style="transform: rotate({masterRotation}deg);"
@@ -76,13 +68,13 @@
 			</div>
 
 			<div class="small-knobs-group">
-				{#each ['TAP', 'DEEP TONE', 'SYSTEM'] as label}
+				{#each ['TAP', 'DEEP TONE', 'SYSTEM'] as label (label)}
 					<div class="small-knob-container">
-						<div class="small-knob">
+						<button aria-label={label} class="small-knob">
 							<div class="small-knob-inner">
 								<div class="small-knob-indicator"></div>
 							</div>
-						</div>
+						</button>
 						<span class="small-knob-label">{label}</span>
 					</div>
 				{/each}
@@ -118,28 +110,28 @@
 		<div class="right-section">
 			<div class="knob-group">
 				<span class="knob-label-top">Select</span>
-				<div class="master-knob">
+				<button aria-label="Select" class="master-knob">
 					<div class="master-knob-inner">
 						<div class="master-knob-indicator"></div>
 					</div>
-				</div>
+				</button>
 			</div>
 
 			<div class="small-buttons-group">
-				{#each ['PLAY', 'SAVE', 'EDIT'] as label}
+				{#each ['PLAY', 'SAVE', 'EDIT'] as label (label)}
 					<div class="small-button-container">
-						<div class="small-button"></div>
+						<button aria-label={label} class="small-button"></button>
 						<span class="small-knob-label">{label}</span>
 					</div>
 				{/each}
 			</div>
 
 			<div class="knob-group">
-				<div class="master-knob">
+				<button aria-label="Mode" class="master-knob">
 					<div class="master-knob-inner">
 						<div class="master-knob-indicator"></div>
 					</div>
-				</div>
+				</button>
 				<span class="knob-label">Mode</span>
 			</div>
 		</div>
@@ -148,7 +140,7 @@
 	<div class="bottom-section">
 		<span class="in-out-label">IN</span>
 		<div class="fx-chain">
-			{#each ['FX', 'DG', 'AMP', 'CAB', 'NS', 'EQ', 'MOD', 'DLY', 'REV'] as label}
+			{#each ['FX', 'DG', 'AMP', 'CAB', 'NS', 'EQ', 'MOD', 'DLY', 'REV'] as label (label)}
 				<div class="fx-block">
 					<div class="fx-led"></div>
 					<span class="fx-label">{label}</span>
@@ -160,8 +152,9 @@
 
 	<div class="functional-controls">
 		<div class="form-group">
-			<label class="form-label">Target Pedal</label>
+			<label for="pedal-select" class="form-label">Target Pedal</label>
 			<Select
+				id="pedal-select"
 				options={PEDALS}
 				bind:value={selectedPedal}
 				placeholder="Select your multi-effects pedal"
@@ -169,8 +162,9 @@
 		</div>
 
 		<div class="form-group">
-			<label class="form-label">Tone Description</label>
+			<label for="tone-description" class="form-label">Tone Description</label>
 			<Input
+				id="tone-description"
 				placeholder={selectedPedal
 					? 'e.g., "John Mayer blues tone" or "Metallica Master of Puppets"'
 					: 'Select a pedal first...'}
@@ -199,7 +193,7 @@
 	</div>
 
 	{#if generatedPreset}
-		<EffectChain preset={effectChainData} />
+		<EffectChain preset={generatedPreset} />
 	{/if}
 </div>
 

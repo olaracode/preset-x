@@ -36,7 +36,7 @@ Generate the effects chain preset. Match the fx-block-name to the "effect-chain"
 				'Content-Type': 'application/json'
 			}
 		});
-	} catch (error) {
+	} catch {
 		return new Response(JSON.stringify({ error: 'Failed to generate preset' }), {
 			status: 500,
 			headers: {
