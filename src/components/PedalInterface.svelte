@@ -50,7 +50,7 @@
 	<div class="top-section">
 		<div class="left-section">
 			<div class="branding">
-				<h1 class="branding-title">GE150Pro</h1>
+				<h1 class="branding-title">Preset-X</h1>
 				<p class="branding-subtitle">MultiEffects &amp; Amp Effects</p>
 			</div>
 
