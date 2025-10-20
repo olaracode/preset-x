@@ -2,6 +2,7 @@
 	import type { GeneratedPreset } from '$lib/types';
 
 	export let preset: GeneratedPreset = [];
+	console.log('PRESET', preset);
 </script>
 
 <div class="effect-chain-container">
@@ -15,12 +16,14 @@
 					<span class={`status ${block['on/off']}`}>{block['on/off']}</span>
 				</div>
 				<div class="settings">
-					{#each Object.entries(block.setting) as [key, value] (key)}
-						<div class="setting">
-							<span class="setting-key">{key}</span>
-							<span class="setting-value">{value}</span>
-						</div>
-					{/each}
+					{#if block.setting}
+						{#each Object.entries(block.setting) as [key, value] (key)}
+							<div class="setting">
+								<span class="setting-key">{key}</span>
+								<span class="setting-value">{value}</span>
+							</div>
+						{/each}
+					{/if}
 				</div>
 			</div>
 		{/each}
