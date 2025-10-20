@@ -43,12 +43,14 @@ To get Preset-X up and running on your local machine, follow these steps:
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
-    git clone https://github.com/your-username/preset-x.git
+    git clone https://github.com/olaracode/preset-x.git
     cd preset-x
     ```
 
 2.  **Install dependencies:**
+
     ```bash
     pnpm install
     ```
@@ -62,6 +64,7 @@ To get Preset-X up and running on your local machine, follow these steps:
 ### Running the Application
 
 1.  **Start the development server:**
+
     ```bash
     pnpm dev
     ```
